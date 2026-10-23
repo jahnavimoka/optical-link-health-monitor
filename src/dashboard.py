@@ -1,5 +1,6 @@
 
 import csv
+from collections import Counter
 from pathlib import Path
 
 import matplotlib.pyplot as plt
@@ -10,7 +11,6 @@ LOG_FILE = Path("logs") / "link_events.csv"
 
 def load_events():
     """Read saved monitoring records from the CSV log."""
-
     if not LOG_FILE.exists():
         raise FileNotFoundError(
             "No event log found. Run python -m src.main first."
@@ -33,8 +33,19 @@ def plot_dashboard():
     latency = [float(e["latency_ms"]) for e in events]
     statuses = [e["status"] for e in events]
 
-    fig, axes = plt.subplots(3, 1, figsize=(11, 10))
-    fig.suptitle("Optical Link Health Monitor", fontsize=16)
+    counts = Counter(statuses)
+
+    print("\nOPTICAL LINK HEALTH SUMMARY")
+    print("-" * 30)
+    print(f"Total readings: {len(events)}")
+    for status in ("HEALTHY", "DEGRADED", "DOWN"):
+        print(f"{status}: {counts.get(status, 0)}")
+
+    fig, axes = plt.subplots(3, 1, figsize=(12, 10))
+    fig.suptitle(
+        f"Optical Link Health Monitor | {len(events)} readings",
+        fontsize=15,
+    )
 
     axes[0].plot(scenarios, signal_power, marker="o")
     axes[0].axhline(-7, linestyle="--", label="Low-signal warning")
@@ -55,16 +66,6 @@ def plot_dashboard():
     axes[2].set_xlabel("Monitoring record")
     axes[2].legend()
     axes[2].grid(True, alpha=0.3)
-
-    for index, status in enumerate(statuses):
-        axes[2].annotate(
-            status,
-            (index, latency[index]),
-            xytext=(0, 8),
-            textcoords="offset points",
-            ha="center",
-            fontsize=8,
-        )
 
     plt.tight_layout()
     plt.show()
