@@ -58,6 +58,21 @@ class TestOpticalLinkMonitor(unittest.TestCase):
 
         self.assertNotIn("HIGH_BIT_ERROR_RATE", result["faults"])
         self.assertEqual(result["status"], "HEALTHY")
+        
+    def test_multiple_faults_are_detected_together(self):
+        telemetry = {
+            "signal_power_dbm": -10.0,
+            "ber": 1e-4,
+            "latency_ms": 20.0,
+        }
+
+        result = assess_link(telemetry)
+
+        self.assertEqual(result["status"], "DOWN")
+        self.assertIn("LOW_SIGNAL_POWER", result["faults"])
+        self.assertIn("HIGH_BIT_ERROR_RATE", result["faults"])
+        self.assertIn("HIGH_LATENCY", result["faults"])
+
 
 
 
