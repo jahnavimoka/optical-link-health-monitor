@@ -15,13 +15,13 @@ This project uses simulated measurements; it does not connect to physical optica
 - Automated unit tests using Python's unittest framework
 
 ## Project Structure
-- `src/simulator.py` — generates telemetry for selected scenarios
-- `src/monitor.py` — classifies link health and detects faults
-- `src/event_logger.py` — appends monitoring results to a CSV file
-- `src/main.py` — runs the monitoring scenarios
-- `src/dashboard.py` — plots logged telemetry
-- `tests/test_monitor.py` — tests monitoring behaviour
-- `logs/link_events.csv` — stores monitoring records
+- `src/simulator.py` - generates telemetry for selected scenarios
+- `src/monitor.py` - classifies link health and detects faults
+- `src/event_logger.py` - appends monitoring results to a CSV file
+- `src/main.py` - runs the monitoring scenarios
+- `src/dashboard.py` - plots logged telemetry
+- `tests/test_monitor.py` - tests monitoring behaviour
+- `logs/link_events.csv` - stores monitoring records
 
 ## Requirements
 - Python 3.13+
