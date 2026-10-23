@@ -34,6 +34,18 @@ class TestOpticalLinkMonitor(unittest.TestCase):
 
         self.assertEqual(result["status"], "DOWN")
         self.assertIn("LOW_SIGNAL_POWER", result["faults"])
+
+    def test_signal_at_down_threshold_is_not_down(self):
+        telemetry = {
+            "signal_power_dbm": -9.0,
+            "ber": 1e-8,
+            "latency_ms": 2.0,
+        }
+
+        result = assess_link(telemetry)
+
+        self.assertEqual(result["status"], "DEGRADED")
+        self.assertIn("LOW_SIGNAL_POWER", result["faults"])
         
     def test_signal_at_warning_threshold_is_not_low_signal(self):
         telemetry = {
@@ -72,6 +84,11 @@ class TestOpticalLinkMonitor(unittest.TestCase):
         self.assertIn("LOW_SIGNAL_POWER", result["faults"])
         self.assertIn("HIGH_BIT_ERROR_RATE", result["faults"])
         self.assertIn("HIGH_LATENCY", result["faults"])
+        
+    def test_unknown_scenario_raises_error(self):
+        with self.assertRaises(ValueError):
+            generate_telemetry("unknown_scenario")
+
 
 
 
